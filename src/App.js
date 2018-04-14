@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-
+import TextAni from './canvas/text_animation.js';
 class App extends Component {
   componentDidMount(){
-
+    new TextAni();
   }
   render() {
     return (
