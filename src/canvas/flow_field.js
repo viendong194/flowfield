@@ -44,7 +44,7 @@ export default class FlowField{
         for(let i=0;i<this.columns;i++){
             for(let j=0;j<this.columns;j++){
                let angle = this.noise.noise3D(i/10,j/10,this.noise3);
-               let length = this.noise.noise3D(i/40+4000,j/40+4000,this.noise3)*0.5;
+               let length = this.noise.noise3D(i/60+4000,j/60+4000,this.noise3)*0.5;
                let x = Math.cos(angle)*length;
                let y = Math.sin(angle)*length;
                this.field[i][j] = new Vector(x,y);
