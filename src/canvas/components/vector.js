@@ -30,4 +30,7 @@ export default class Vector{
         let mag = this.mag(this);
         return this.div(mag);
     }
+    dot = (vector) =>{
+        return this.x*vector.x + this.y*vector.y;
+    }
 }
