@@ -9,7 +9,7 @@ export default class TextAni{
         this.mousePos = new Vector(0,0);
         window.addEventListener('resize',this.resize,false);
         this.canvas.addEventListener('mousemove',this.getMouse,false);
-        this.points = this.drawTxt('caters');
+        this.points = this.drawTxt('暇は辛い');
         this.particles = [];
         this.creatParticles();
         this.animation();
@@ -56,6 +56,7 @@ export default class TextAni{
             this.particles[i].move();
             this.ctx.beginPath();
             this.ctx.fillStyle = "#000";
+            this.ctx.globalAlpha = 1-this.particles[i].vel.mag();
             this.ctx.arc(this.particles[i].pos.a,this.particles[i].pos.b,5,0,Math.PI*2,false);
             this.ctx.fill();
             this.ctx.closePath();

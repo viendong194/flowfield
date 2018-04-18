@@ -24,17 +24,17 @@ export default class FlowPath{
     this.animation();
   }
   createPath = () =>{
-    // ctx.save();
-    // ctx.beginPath();
-    // ctx.strokeStyle = "#fff";
-    // ctx.moveTo(0,canvas.height/2);
-    // ctx.lineTo(canvas.width/4,canvas.height/3);
-    // ctx.lineTo(canvas.width/2,canvas.height/2);
-    // ctx.lineTo(3*canvas.width/4,canvas.height/4);
-    // ctx.lineTo(canvas.width,canvas.height/2);
-    // ctx.stroke();
-    // ctx.closePath()
-    // ctx.restore();
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = "#fff";
+    ctx.moveTo(0,canvas.height/2);
+    ctx.lineTo(canvas.width/4,canvas.height/3);
+    ctx.lineTo(canvas.width/2,canvas.height/2);
+    ctx.lineTo(3*canvas.width/4,canvas.height/4);
+    ctx.lineTo(canvas.width,canvas.height/2);
+    ctx.stroke();
+    ctx.closePath()
+    ctx.restore();
     let seg01_start = new Vector(0,canvas.height/2);
     let seg01_end = new Vector(canvas.width/4,canvas.height/3);
     let seg02_end = new Vector(canvas.width/2,canvas.height/2);
@@ -58,7 +58,7 @@ export default class FlowPath{
   }
   draw = () =>{
     for(let i=0;i<this.particles.length;i++){
-        this.particles[0].behavior(this.path);
+        this.particles[i].behavior(this.path);
     }
   }
   animation = () =>{
@@ -81,7 +81,7 @@ export default class FlowPath{
 class Particle{
   constructor(x,y){
       this.pos = new Vector(x,y);
-      this.vel = new Vector(3,1);
+      this.vel = new Vector(0,0);
       this.acc = new Vector(0,0);
       this.size = 5;
       this.maxSpeed = 5;
