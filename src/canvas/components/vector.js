@@ -28,9 +28,13 @@ export default class Vector{
     }
     normalize = () =>{
         let mag = this.mag(this);
+        if(mag===0){
+          return new Vector(0,0);  
+        }
         return this.div(mag);
     }
     dot = (vector) =>{
-        return this.x*vector.x + this.y*vector.y;
+        let value = this.x*vector.x + this.y*vector.y
+        return value;
     }
 }

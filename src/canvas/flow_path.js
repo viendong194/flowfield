@@ -50,7 +50,7 @@ export default class FlowPath{
     this.path.push(point);
   }
   createParticle = () =>{
-    let number = canvas.width*canvas.height/2000;
+    let number = 100;
     this.particles = [];
     for(let i=0;i<number;i++){
         this.particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height));
@@ -107,30 +107,45 @@ class Particle{
           this.pos.y = canvas.height -1;
        }
   }
+  getNormalPoint = (p,a,b) =>{
+    let ap = new Vector(p.x-a.x,p.y-a.y);
+    let ab = new Vector(b.x-a.x,b.y-a.y);
+    ab.normalize();
+    let mag = ap.dot(ab);
+    let value = ab.mul(mag);
+    return new Vector(value.x+a.x,value.y+a.y);
+    
+  }
   findTarget = (segmentPoints) =>{
+    let predict = new Vector(this.vel.x,this.vel.y);
+    predict.normalize().mul(50);
+    // console.log(predict.x);
+    let predictPos = predict.add(this.pos);
     let record = 10000000;
     let target = null;
+    let normal = null;
     for(let i=0;i<segmentPoints.length-1;i++){
       let a = new Vector(segmentPoints[i].x,segmentPoints[i].y);
       let b = new Vector(segmentPoints[i+1].x,segmentPoints[i+1].y);
-      let predictPoint = new Vector(this.vel.x,this.vel.y);
-      predictPoint.mul(25);
-      let vectorA = predictPoint.sub(a);
-      let vectorB = new Vector(b.x-a.x,b.y-a.y);
-      vectorB.normalize();
-      let normalPoint = vectorB.mul(vectorA.dot(vectorB));
+      
+      // this.getNormalPoint(predictPos,a,b);
+      let normalPoint = this.getNormalPoint(predictPos,a,b);
       if(normalPoint.x<a.x||normalPoint.x>b.x){
         normalPoint = new Vector(b.x,b.y);
       }
-      let distance = predictPoint.sub(normalPoint).mag();
+      let distance = predictPos.sub(normalPoint).mag();
+      
       if(distance<record){
         record = distance;
         let dir = new Vector(b.x-a.x,b.y-a.y);
         dir.normalize().mul(15)
-        target = normalPoint.add(dir);
+        target = new Vector(normalPoint.x,normalPoint.y);
+        target.add(dir);
       }
     }
-    return target;
+    if (record > 30) {
+			return target;
+		}
   }
   behavior = (segmentPoints) =>{
     let target = this.findTarget(segmentPoints);
@@ -153,7 +168,6 @@ class Particle{
     return steer;
   }
   move = () =>{
-      
       this.pos.add(this.vel);
       this.vel.add(this.acc);
       this.acc = new Vector(0,0);
@@ -161,6 +175,7 @@ class Particle{
       this.draw();
   }
   draw = () =>{
+      
       ctx.save();
       ctx.fillStyle = `hsla(${hue}, 50%, 50%, 1)`;
       ctx.beginPath();

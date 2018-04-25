@@ -5,8 +5,8 @@ import FlowPath from './canvas/flow_path.js';
 class App extends Component {
   componentDidMount(){
     // new TextAni();
-    new FlowField();
-    // new FlowPath();
+    // new FlowField();
+    new FlowPath();
   }
   render() {
     return (
