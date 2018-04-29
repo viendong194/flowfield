@@ -35,11 +35,11 @@ export default class FlowPath{
     ctx.stroke();
     ctx.closePath()
     ctx.restore();
-    let seg01_start = new Vector(0,canvas.height/2);
-    let seg01_end = new Vector(canvas.width/4,canvas.height/3);
+    let seg01_start = new Vector(0,canvas.height*0.6);
+    let seg01_end = new Vector(canvas.width/4,canvas.height*0.4);
     let seg02_end = new Vector(canvas.width/2,canvas.height/2);
-    let seg03_end = new Vector(3*canvas.width/4,canvas.height/4);
-    let seg04_end = new Vector(canvas.width,canvas.height/2);
+    let seg03_end = new Vector(3*canvas.width/4,canvas.height*0.5);
+    let seg04_end = new Vector(canvas.width,canvas.height*0.3);
     this.getSegmentPoints(seg01_start);
     this.getSegmentPoints(seg01_end);
     this.getSegmentPoints(seg02_end);
@@ -57,6 +57,7 @@ export default class FlowPath{
     }
   }
   draw = () =>{
+    
     for(let i=0;i<this.particles.length;i++){
         this.particles[i].behavior(this.path);
     }
@@ -121,7 +122,7 @@ class Particle{
     predict.normalize().mul(50);
     // console.log(predict.x);
     let predictPos = predict.add(this.pos);
-    let record = 10000000;
+    let record = 1000000000;
     let target = null;
     let normal = null;
     for(let i=0;i<segmentPoints.length-1;i++){
@@ -130,12 +131,14 @@ class Particle{
       
       // this.getNormalPoint(predictPos,a,b);
       let normalPoint = this.getNormalPoint(predictPos,a,b);
-      if(normalPoint.x<a.x||normalPoint.x>b.x){
+      if(normalPoint.x<a.x || normalPoint.x>b.x){
         normalPoint = new Vector(b.x,b.y);
+    
       }
-      let distance = predictPos.sub(normalPoint).mag();
-      
-      if(distance<record){
+      // let distance2 = predictPos.sub(normalPoint).mag();
+      let distance = Math.sqrt((predictPos.x-normalPoint.x)*(predictPos.x-normalPoint.x)+(predictPos.y-normalPoint.y)*(predictPos.y-normalPoint.y))
+      // if(distance2==distance ) console.log(1)
+      if(distance < record){
         record = distance;
         let dir = new Vector(b.x-a.x,b.y-a.y);
         dir.normalize().mul(15)
@@ -152,7 +155,10 @@ class Particle{
     if(target){
       let arrive = this.arrive(target);
       this.applyForce(arrive);
+    }else{
+      this.move()
     }
+
   }
   arrive = (target) =>{
     let desire = target.sub(this.pos) ;
