@@ -53,13 +53,13 @@ export default class FlowPath{
     let number = 100;
     this.particles = [];
     for(let i=0;i<number;i++){
-        this.particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height));
+      this.particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height));
     }
   }
   draw = () =>{
     
     for(let i=0;i<this.particles.length;i++){
-        this.particles[i].behavior(this.path);
+        this.particles[i].behavior(this.path,this.particles);
     }
   }
   animation = () =>{
@@ -92,8 +92,9 @@ class Particle{
       this.maxForce = 0.5;
       this.radius = 50;
   }
-  applyForce = (force)=>{
+  applyForce = (force,steer)=>{
       this.acc.add(force);
+      this.acc.add(steer);
       this.move();
   }
   bound = () =>{
@@ -129,15 +130,12 @@ class Particle{
       let a = new Vector(segmentPoints[i].x,segmentPoints[i].y);
       let b = new Vector(segmentPoints[i+1].x,segmentPoints[i+1].y);
       
-      // this.getNormalPoint(predictPos,a,b);
       let normalPoint = this.getNormalPoint(predictPos,a,b);
       if(normalPoint.x<a.x || normalPoint.x>b.x){
         normalPoint = new Vector(b.x,b.y);
     
       }
-      // let distance2 = predictPos.sub(normalPoint).mag();
       let distance = Math.sqrt((predictPos.x-normalPoint.x)*(predictPos.x-normalPoint.x)+(predictPos.y-normalPoint.y)*(predictPos.y-normalPoint.y))
-      // if(distance2==distance ) console.log(1)
       if(distance < record){
         record = distance;
         let dir = new Vector(b.x-a.x,b.y-a.y);
@@ -146,17 +144,48 @@ class Particle{
         target.add(dir);
       }
     }
-    if (record > 30) {
+    if (record > 60) {
 			return target;
 		}
   }
-  behavior = (segmentPoints) =>{
+  separate = (points) => {
+    let other = points;
+    let steer = new Vector(0,0);
+    let count = 0;
+    
+    for(let i=0;i<other.length;i++){
+      let distance = Math.sqrt((this.pos.x-other[i].pos.x)*(this.pos.x-other[i].pos.x)+(this.pos.y-other[i].pos.y)*(this.pos.y-other[i].pos.y));
+      if(0<distance&&distance<30){
+        let diff = new Vector(this.pos.x-other[i].pos.x,this.pos.y-other[i].pos.y);
+        diff.normalize();
+        diff.div(distance);
+        steer.add(diff);
+        count ++;
+      }
+    }
+    if(count>0){
+      steer.div(count);
+    }
+    if(steer.mag()>0){
+      steer.normalize();
+      steer.mul(2)
+      steer.sub(this.vel);
+      if(steer.mag()>0.02){
+        steer.normalize().mul(0.02);
+      }
+    }
+    
+    return steer;
+  }
+
+  behavior = (segmentPoints,other) =>{
     let target = this.findTarget(segmentPoints);
+    let steer = this.separate(other);
     if(target){
       let arrive = this.arrive(target);
-      this.applyForce(arrive);
+      this.applyForce(arrive,steer);
     }else{
-      this.move()
+      this.applyForce(new Vector(0,0),steer);
     }
 
   }
