@@ -24,22 +24,22 @@ export default class FlowPath{
     this.animation();
   }
   createPath = () =>{
-    ctx.save();
-    ctx.beginPath();
-    ctx.strokeStyle = "#fff";
-    ctx.moveTo(0,canvas.height/2);
-    ctx.lineTo(canvas.width/4,canvas.height/3);
-    ctx.lineTo(canvas.width/2,canvas.height/2);
-    ctx.lineTo(3*canvas.width/4,canvas.height/4);
-    ctx.lineTo(canvas.width,canvas.height/2);
-    ctx.stroke();
-    ctx.closePath()
-    ctx.restore();
-    let seg01_start = new Vector(0,canvas.height*0.6);
-    let seg01_end = new Vector(canvas.width/4,canvas.height*0.4);
+    // ctx.save();
+    // ctx.beginPath();
+    // ctx.strokeStyle = "#fff";
+    // ctx.moveTo(0,canvas.height/2);
+    // ctx.lineTo(canvas.width/4,canvas.height/3);
+    // ctx.lineTo(canvas.width/2,canvas.height/2);
+    // ctx.lineTo(3*canvas.width/4,canvas.height/4);
+    // ctx.lineTo(canvas.width,canvas.height/2);
+    // ctx.stroke();
+    // ctx.closePath()
+    // ctx.restore();
+    let seg01_start = new Vector(0,canvas.height*0.7);
+    let seg01_end = new Vector(canvas.width/4,canvas.height*0.3);
     let seg02_end = new Vector(canvas.width/2,canvas.height/2);
-    let seg03_end = new Vector(3*canvas.width/4,canvas.height*0.5);
-    let seg04_end = new Vector(canvas.width,canvas.height*0.3);
+    let seg03_end = new Vector(3*canvas.width/4,canvas.height*0.6);
+    let seg04_end = new Vector(canvas.width,canvas.height*0.2);
     this.getSegmentPoints(seg01_start);
     this.getSegmentPoints(seg01_end);
     this.getSegmentPoints(seg02_end);
@@ -50,10 +50,10 @@ export default class FlowPath{
     this.path.push(point);
   }
   createParticle = () =>{
-    let number = 100;
+    let number = 300;
     this.particles = [];
     for(let i=0;i<number;i++){
-      this.particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height));
+      this.particles.push(new Particle(Math.random()*canvas.width,Math.random()*5+canvas.height/2));
     }
   }
   draw = () =>{
@@ -84,12 +84,11 @@ class Particle{
       this.pos = new Vector(x,y);
       this.vel = new Vector(0,0);
       this.acc = new Vector(0,0);
-      this.size = 5;
-      this.maxSpeed = 5;
+      this.size = 2;
+      this.maxSpeed = 3;
       this.noise = new OpenSimplexNoise(Math.random());
       this.noiseX = Math.random()*20+1;
-      this.maxSpeed = 5;
-      this.maxForce = 0.5;
+      this.maxForce = 0.3;
       this.radius = 50;
   }
   applyForce = (force,steer)=>{
@@ -170,8 +169,8 @@ class Particle{
       steer.normalize();
       steer.mul(2)
       steer.sub(this.vel);
-      if(steer.mag()>0.02){
-        steer.normalize().mul(0.02);
+      if(steer.mag()>0.03){
+        steer.normalize().mul(0.03);
       }
     }
     
@@ -210,11 +209,11 @@ class Particle{
       this.draw();
   }
   draw = () =>{
-      
+      let color = 5*this.pos.x/window.innerWidth*100;
       ctx.save();
-      ctx.fillStyle = `hsla(${hue}, 50%, 50%, 1)`;
+      ctx.fillStyle = `hsla(${color}, 50%, 50%, 1)`;
       ctx.beginPath();
-      ctx.globalAlpha = this.noise.noise3D(this.noiseX,this.noiseX,Math.random());
+      
       ctx.arc(this.pos.x,this.pos.y,this.size,0,Math.PI*2,false);
       ctx.fill();
       ctx.closePath();
