@@ -71,7 +71,7 @@ export default class FlowField{
             let posy = this.field[a][b].y;
             let force = new Vector(posx,posy);
          //    console.log(force)
-            this.particles[i].applyForce(force);
+            this.particles[i].applyForce(force,this.particles);
             // this.particles[i].bound();
            }else{
             this.particles[i].move();
@@ -121,10 +121,41 @@ class Particle{
         this.noise = new OpenSimplexNoise(Math.random());
         this.noiseX = Math.random()*20+1;
     }
-    applyForce = (force)=>{
+    applyForce = (force,other)=>{
+        let steer = this.separate(other);
         this.acc.add(force);
+        this.acc.add(steer);
         this.move();
     }
+    separate = (points) => {
+        let other = points;
+        let steer = new Vector(0,0);
+        let count = 0;
+        
+        for(let i=0;i<other.length;i++){
+          let distance = Math.sqrt((this.pos.x-other[i].pos.x)*(this.pos.x-other[i].pos.x)+(this.pos.y-other[i].pos.y)*(this.pos.y-other[i].pos.y));
+          if(0<distance&&distance<30){
+            let diff = new Vector(this.pos.x-other[i].pos.x,this.pos.y-other[i].pos.y);
+            diff.normalize();
+            diff.div(distance);
+            steer.add(diff);
+            count ++;
+          }
+        }
+        if(count>0){
+          steer.div(count);
+        }
+        if(steer.mag()>0){
+          steer.normalize();
+          steer.mul(2)
+          steer.sub(this.vel);
+          if(steer.mag()>0.1){
+            steer.normalize().mul(0.1);
+          }
+        }
+        
+        return steer;
+      }
     bound = () =>{
         if(this.pos.x > canvas.width + this.size){
            this.pos.x = this.size;
