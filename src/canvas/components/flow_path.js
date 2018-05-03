@@ -1,4 +1,4 @@
-import Vector from './components/vector';
+import Vector from './vector';
 import OpenSimplexNoise from 'open-simplex-noise';
 
 const canvas = document.createElement('canvas');
