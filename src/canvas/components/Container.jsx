@@ -5,8 +5,8 @@ import FlowPath from './flow_path.js';
 class Container extends Component {
   componentDidMount(){
     // new TextAni();
-    new FlowField();
-    // new FlowPath();
+    // new FlowField();
+    new FlowPath();
   }
   render() {
     return (

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Container from './canvas/components/Container.jsx';
+import Slider from './slider/Slider.jsx';
 class App extends Component {
   componentDidMount(){
     
@@ -7,7 +8,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Container/>
+        {/* <Container/> */}
+        <Slider/>
       </div>
     );
   }
