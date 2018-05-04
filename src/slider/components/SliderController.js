@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import TimelineMax from 'gsap/TimelineMax';
-import displacementImage from './displacement/pointilize.jpg';
+import displacementImage from './displacement/fibers.jpg';
 import sprite00 from './images/ny.jpg';
 import sprite01 from './images/balloon.jpg';
 import sprite02 from './images/balloon2.jpg';
@@ -104,7 +104,7 @@ export default class SliderController{
       let secondtimeline = new TimelineMax({paused: false});
       basetimeline.to(this.displacementFilter.scale,0.5,{x:0,y:100})
                   .to(this.slidesContainer.children[oldcurrent],0.5,{alpha:0})
-                  .to(this.slidesContainer.children[this.current],0.5,{alpha:1},"-=0.75")
+                  .to(this.slidesContainer.children[this.current],0.5,{alpha:1},"-=0.5")
                   .to(this.displacementFilter.scale,0.5,{x:0,y:0});
     }
     animate = () => {
