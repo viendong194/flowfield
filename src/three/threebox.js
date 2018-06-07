@@ -42,9 +42,9 @@ export default class threebox {
 			() => {
         this.chaos = true;
         for(let i=0;i<this.vertices.length;i++){
-          this.vertices[i].x += Math.random() * 2000 - 1000;
-          this.vertices[i].y += Math.random() * 2000 - 1000;
-          this.vertices[i].z += Math.random() * 2000 - 1000;
+          this.vertices[i].x = Math.random() * 2000 - 1000;
+          this.vertices[i].y = Math.random() * 2000 - 1000;
+          this.vertices[i].z = Math.random() * 2000 - 1000;
         }
 			},
 			false
@@ -134,25 +134,29 @@ export default class threebox {
 		this.particles = new THREE.Points(geometry, this.material);
 		this.world.add(this.particles);
 		this.vertices = this.particles.geometry.vertices;
+		for(let i=0;i<this.vertices.length;i++){
+			this.vertices[i].x = Math.random() * 2000 - 1000;
+			this.vertices[i].y = Math.random() * 2000 - 1000;
+			this.vertices[i].z = Math.random() * 2000 - 1000;
+		}
 		this.render();
 	};
 	render = () => {
 		this.particles.geometry.verticesNeedUpdate = true;
 		this.particles.geometry.__dirtyVertices = true;
 		if (this.chaos) {
-			for (let i = 0; i < this.vertices.length; i++) {
-				this.vertices[i].x += Math.random() * 3-3;
-				this.vertices[i].y += Math.random() * 2-2;
-        this.vertices[i].z += Math.random() * 1-1;
-      
-			}
+			this.particles.rotation.y += 0.001;
+			this.particles.rotation.z += 0.001;
+			this.particles.rotation.x += 0.001;
 		} else {
 			for (let i = 0; i < this.vertices.length; i++) {
-				this.vertices[i].x = -this.pixels[i].x + 125;
-				this.vertices[i].y = this.pixels[i].y - 75;
-				this.vertices[i].z = this.pixels[i].z;
+				this.vertices[i].x -= (this.vertices[i].x+this.pixels[i].x-250)/(Math.random()*100+1);
+				this.vertices[i].y -= (this.vertices[i].y-this.pixels[i].y+150)/(Math.random()*100+2);
+				this.vertices[i].z -= (this.vertices[i].z-this.pixels[i].z)/(Math.random()*100+3);
 			}
-			this.particles.rotation.y += 0.1;
+			this.particles.rotation.y += 0.005;
+			this.particles.rotation.z += 0.005;
+			this.particles.rotation.x += 0.005;
 		}
 		this.renderer.render(this.scene, this.camera);
 		requestAnimationFrame(() => this.render());
