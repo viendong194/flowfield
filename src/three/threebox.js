@@ -41,11 +41,6 @@ export default class threebox {
 			'mouseup',
 			() => {
         this.chaos = true;
-        for(let i=0;i<this.vertices.length;i++){
-          this.vertices[i].x = Math.random() * 2000 - 1000;
-          this.vertices[i].y = Math.random() * 2000 - 1000;
-          this.vertices[i].z = Math.random() * 2000 - 1000;
-        }
 			},
 			false
 		);
@@ -94,8 +89,7 @@ export default class threebox {
 			}
 			this.createParticles(this.pixels);
 		};
-		img.src = '/wolf.jpg';
-		// return pixels;
+		img.src = '/wolf03.jpg';
 	};
 	createParticles = (pixels) => {
 		let geometry = new THREE.Geometry(),
@@ -105,7 +99,7 @@ export default class threebox {
 			vertex,
 			particles;
 		for (let i = 0; i < pixels.length; i++) {
-			pixel = pixels[i];
+			pixel = pixels[pixels.length-1-i];
 			vertex = new THREE.Vector3();
 			vertex.x = - pixel.x + 250;
 			vertex.y = pixel.y - 150;
@@ -127,17 +121,21 @@ export default class threebox {
 			size: 3,
 			// sizeAttenuation: false,
 			// transparent: false,
-			vertexColors: THREE.VertexColors
+			vertexColors: THREE.VertexColors,
 			// side: THREE.FrontSide,
-			// depthTest: false
+			depthTest: false
 		});
+		this.start = [];
 		this.particles = new THREE.Points(geometry, this.material);
 		this.world.add(this.particles);
 		this.vertices = this.particles.geometry.vertices;
 		for(let i=0;i<this.vertices.length;i++){
-			this.vertices[i].x = Math.random() * 2000 - 1000;
-			this.vertices[i].y = Math.random() * 2000 - 1000;
-			this.vertices[i].z = Math.random() * 2000 - 1000;
+			this.start.push({x:0,y:0,z:0});
+		}
+		for(let i=0;i<this.vertices.length;i++){
+			this.start[i].x = Math.random() * 2000 - 1000;
+			this.start[i].y = Math.random() * 2000 - 1000;
+			this.start[i].z = Math.random() * 2000 - 1000;
 		}
 		this.render();
 	};
@@ -145,6 +143,11 @@ export default class threebox {
 		this.particles.geometry.verticesNeedUpdate = true;
 		this.particles.geometry.__dirtyVertices = true;
 		if (this.chaos) {
+			for (let i = 0; i < this.vertices.length; i++) {
+				this.vertices[i].x -= (this.vertices[i].x - this.start[i].x)/(Math.random()*300+1);
+				this.vertices[i].y -= (this.vertices[i].y - this.start[i].y)/(Math.random()*300+2);
+				this.vertices[i].z -= (this.vertices[i].z - this.start[i].z)/(Math.random()*300+3);
+			}
 			this.particles.rotation.y += 0.001;
 			this.particles.rotation.z += 0.001;
 			this.particles.rotation.x += 0.001;
@@ -154,9 +157,9 @@ export default class threebox {
 				this.vertices[i].y -= (this.vertices[i].y-this.pixels[i].y+150)/(Math.random()*100+2);
 				this.vertices[i].z -= (this.vertices[i].z-this.pixels[i].z)/(Math.random()*100+3);
 			}
-			this.particles.rotation.y += 0.005;
-			this.particles.rotation.z += 0.005;
-			this.particles.rotation.x += 0.005;
+			this.particles.rotation.y += 0.01;
+			this.particles.rotation.z = 0;
+			this.particles.rotation.x = 0;
 		}
 		this.renderer.render(this.scene, this.camera);
 		requestAnimationFrame(() => this.render());

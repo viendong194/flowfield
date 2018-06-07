@@ -13,6 +13,13 @@ body {
   position:absolute;
   display:none;
 }
+#note{
+  position:fixed;
+  bottom:20vw;
+  color:white;
+  font-size:2vw;
+  z-index:1000;
+}
 canvas{
   position:absolute;
 }

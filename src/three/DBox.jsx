@@ -8,6 +8,7 @@ class Dbox extends Component {
     return (
       <div className="dbox">
         <canvas id="canvas"></canvas>
+        <div id="note">CLICK and HOLD</div>
       </div>
     );
   }
