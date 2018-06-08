@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import GeomUtils from 'three/examples/js/utils/GeometryUtils';
 
 export default class threetext {
   constructor() {
