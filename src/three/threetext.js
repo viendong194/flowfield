@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import GeomUtils from 'three/examples/js/utils/GeometryUtils';
+import GeometryUtils from 'three/examples/js/utils/GeometryUtils';
 
 export default class threetext {
   constructor() {
@@ -23,19 +23,21 @@ export default class threetext {
 
     this.container.appendChild(this.renderer.domElement);
     let loader = new THREE.FontLoader();
-    loader.load('/font.json',(font)=>{
-      let theText = "I'm frontier";
-      let text3d = new THREE.TextGeometry(theText,{
-        size : 80,
-        height : 5,
-        curveSegments : 1,
-        font : font
-      });
-  
-      let textMaterial = new THREE.MeshBasicMaterial({
-        color : Math.random() * 0xffffff,
-      });
+    loader.load('/font02.json',(font)=>{
+      let theText = ["I","AM","DONG"];
+      let text3d = [];
+      for(let i=0;i<theText.length;i++){
+        text3d[i].geometry = new THREE.TextGeometry(theText[i],{
+          size : window.innerWidth*0.02,
+          height : 4,
+          curveSegments : 10,
+          font : font
+        });
 
+        THREE.GeometryUtils.center( text3d[i].geometry )
+        text3d[i].particles = new THREE.Geometry();
+		    text3d[i].points = THREE.GeometryUtils.randomPointsInGeometry(texts[i].geometry, 6000);
+      }
       this.text = new THREE.Mesh(text3d,textMaterial);
       
       this.scene.add(this.text);
