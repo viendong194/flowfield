@@ -30,9 +30,9 @@ export default class SliderController{
     //    this.displacementSprite = this.scaleToFit(this.displacementSprite);
        this.displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
        this.displacementFilter  = new PIXI.filters.DisplacementFilter( this.displacementSprite );
-    //    this.displacementFilter.autoFit = true;
-       this.displacementFilter.scale.y = 0;
-       this.displacementFilter.scale.x = 0;
+       this.displacementFilter.autoFit = true;
+    //    this.displacementFilter.scale.y = 0;
+    //    this.displacementFilter.scale.x = 0;
     
 
        this.wrapper.appendChild(this.renderer.view);
@@ -112,7 +112,8 @@ export default class SliderController{
         const ticker = new PIXI.ticker.Ticker();
         ticker.autoStart = true;
         ticker.add( (delta)=>{
-            // console.log(delta)
+            this.displacementSprite.y +=delta;
+            this.displacementSprite.x +=delta;
             this.renderer.render(this.stage)
         });
     }
